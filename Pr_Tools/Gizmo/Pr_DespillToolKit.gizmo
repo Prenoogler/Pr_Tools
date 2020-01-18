@@ -1,0 +1,872 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ inputs 3
+ help www.shuaiqi.me
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name()=='AlgorithmChoice':\n    n\['dissolve'].setVisible(k.getValue()==6)\n    n\['pickcolor'].setVisible(k.getValue()==7)\nelif k.name()=='ReplacementChoice':\n    n\['replacecolor'].setVisible(k.getValue()==2)\n    n\['bggain'].setVisible(k.getValue()==3)\n    n\['bgsize'].setVisible(k.getValue()==3)\n    n\['bgsaturation'].setVisible(k.getValue()==3)"
+ tile_color 0xff00ff
+ note_font Verdana
+ mapsize {0.15 0.15}
+ addUserKnob {20 main l Main}
+ addUserKnob {26 OperationEnvironment l "Operation Environment"}
+ addUserKnob {4 ColorSpace -STARTLINE M {Lin Log}}
+ addUserKnob {4 ColorChoice l "     Screen Type" -STARTLINE M {Green Blue}}
+ addUserKnob {26 Despill l "Despill Algorithm"}
+ addUserKnob {4 AlgorithmChoice l Algorithm M {Keylight "Limit to Red" "Limit to Blue/Green" "Limit to Average" "Limit to Min of Red and Bule/Green" "Limit to Max of Red and Bule/Green" "Limit to Disslove of Red and Bule/Green" "Keylight Pick" "" "" "" "" "" ""}}
+ addUserKnob {16 dissolve l Dissolve +HIDDEN}
+ dissolve 0.5
+ addUserKnob {18 pickcolor l Pick +HIDDEN}
+ pickcolor {0 0 0}
+ addUserKnob {6 pickcolor_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 pickcolor_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 Spillrepl l "Spill Replacement Option"}
+ addUserKnob {7 spillmapgain l "Spill Map Gain" R 0 2}
+ spillmapgain 1
+ addUserKnob {4 ReplacementChoice l "Spill Replacement" M {None Luminance Color Background "" "" ""}}
+ ReplacementChoice Background
+ addUserKnob {6 outputAlpha l "Output Spillmap Into Alpha" -STARTLINE}
+ outputAlpha true
+ addUserKnob {18 replacecolor l Color +HIDDEN}
+ replacecolor {0 0 0}
+ addUserKnob {6 replacecolor_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 replacecolor_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {7 bggain l "BG Gain" R 0 2}
+ bggain 2
+ addUserKnob {14 bgsize l "BG Blur Size" R 0 100}
+ bgsize 15
+ addUserKnob {8 bgsaturation l "BG Saturation" R 0 4}
+ bgsaturation 1.38
+ addUserKnob {6 color_rgb_panelDropped_1 l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {6 color_rgb_panelDropped_2 l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_DespillToolKit v1.2\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label None
+  xpos -341
+  ypos -163
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote2
+  label Color
+  xpos -147
+  ypos -163
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote3
+  label Background
+  xpos 190
+  ypos -170
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote4
+  label Luminance
+  xpos 356
+  ypos -150
+ }
+ Input {
+  inputs 0
+  name mask
+  xpos 200
+  ypos 567
+  number 1
+ }
+ Input {
+  inputs 0
+  name fg
+  xpos 23
+  ypos -854
+ }
+set Nfb428800 [stack 0]
+ Dot {
+  name Dot35
+  xpos -1252
+  ypos -850
+ }
+ Dot {
+  name Dot15
+  xpos -1252
+  ypos 571
+ }
+push $Nfb428800
+ OCIOLogConvert {
+  operation "lin to log"
+  name OCIOLogConvert1
+  xpos 23
+  ypos -807
+  disable {{parent.ColorSpace==0?1:0}}
+ }
+ Dot {
+  name Dot1
+  xpos 57
+  ypos -763
+ }
+set Nfb43f800 [stack 0]
+ Dot {
+  name Dot9
+  xpos 126
+  ypos -719
+ }
+set Nfb43f400 [stack 0]
+ Dot {
+  name Dot7
+  xpos 207
+  ypos -719
+ }
+set Nfb43f000 [stack 0]
+ Dot {
+  name Dot25
+  xpos 286
+  ypos -719
+ }
+set Nfb43ec00 [stack 0]
+ Dot {
+  name Dot6
+  xpos 361
+  ypos -719
+ }
+set Nfb43e800 [stack 0]
+ Dot {
+  name Dot5
+  xpos 441
+  ypos -718
+ }
+set Nfb43e400 [stack 0]
+ Dot {
+  name Dot17
+  xpos 658
+  ypos -718
+ }
+set Nfb43e000 [stack 0]
+ Dot {
+  name Dot23
+  xpos 986
+  ypos -718
+ }
+set Nfb455c00 [stack 0]
+ Dot {
+  name Dot27
+  xpos 1264
+  ypos -718
+ }
+ Dot {
+  name Dot33
+  xpos 1264
+  ypos -446
+ }
+set Nfb455400 [stack 0]
+push $Nfb455c00
+ OFXuk.co.thefoundry.keylight.keylight_v201 {
+  show "Final Result"
+  unPreMultiply false
+  screenColour {{parent.pickcolor.r} {parent.pickcolor.g} {parent.pickcolor.b}}
+  screenGain 1
+  screenBalance 0.5
+  alphaBias {0.5 0.5 0.5}
+  despillBias {0.5 0.5 0.5}
+  gangBiases true
+  preBlur 0
+  "Screen Matte" 0
+  screenClipMin 0
+  screenClipMax 1
+  screenClipRollback 0
+  screenGrowShrink 0
+  screenSoftness 0
+  screenDespotBlack 0
+  screenDespotWhite 0
+  screenReplaceMethod "Soft Colour"
+  screenReplaceColour {0.5 0.5 0.5}
+  Tuning 0
+  midPoint 0.5
+  lowGain 1
+  midGain 1
+  highGain 1
+  "Inside Mask" 0
+  sourceAlphaHandling Ignore
+  insideReplaceMethod "Soft Colour"
+  insideReplaceColour {0.5 0.5 0.5}
+  Crops 0
+  SourceXMethod Colour
+  SourceYMethod Colour
+  SourceEdgeColour 0
+  SourceCropL 0
+  SourceCropR 1
+  SourceCropB 0
+  SourceCropT 1
+  balanceSet false
+  insideComponent None
+  outsideComponent None
+  cacheBreaker true
+  name Keylight1
+  xpos 1006
+  ypos -627
+ }
+ set Cfb455000 [stack 0]
+set Nfb455000 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge5
+  xpos 1116
+  ypos -478
+ }
+push $Nfb455000
+ ShuffleCopy {
+  inputs 2
+  alpha blue
+  name ShuffleCopy7
+  xpos 1006
+  ypos -482
+ }
+push $Nfb43e000
+ Dot {
+  name Dot16
+  xpos 658
+  ypos -666
+ }
+set Nfb454400 [stack 0]
+add_layer {hunhe hunhe.value}
+ Shuffle {
+  red green
+  out hunhe
+  name Shuffle5
+  xpos 714
+  ypos -628
+ }
+push $Nfb454400
+ Shuffle {
+  out hunhe
+  name Shuffle6
+  xpos 536
+  ypos -630
+ }
+ Dissolve {
+  inputs 2
+  channels hunhe
+  which {{parent.dissolve}}
+  name Dissolve1
+  xpos 624
+  ypos -601
+ }
+ set Cfb481800 [stack 0]
+ Expression {
+  temp_name0 spill
+  temp_expr0 g>hunhe.value?hunhe.value:g
+  expr2 spill
+  expr3 g-spill
+  name Expression2
+  xpos 624
+  ypos -545
+ }
+push $Nfb43f000
+ Expression {
+  temp_name0 spill
+  temp_expr0 b>max(r,g)?max(r,g):b
+  expr2 spill
+  expr3 b-spill
+  name blueMax
+  xpos 173
+  ypos -574
+ }
+push $Nfb43ec00
+ Expression {
+  temp_name0 spill
+  temp_expr0 b>min(r,g)?min(r,g):b
+  expr2 spill
+  expr3 b-spill
+  name blueMin
+  xpos 252
+  ypos -574
+ }
+push $Nfb43f400
+ Expression {
+  temp_name0 spill
+  temp_expr0 b>((r+g)/2)?((r+g)/2):b
+  expr2 spill
+  expr3 b-spill
+  name blueAverage
+  xpos 92
+  ypos -574
+ }
+push $Nfb43e400
+ Expression {
+  temp_name0 spill
+  temp_expr0 b>g?g:b
+  expr2 spill
+  expr3 b-spill
+  name blueLimitGreen
+  xpos 407
+  ypos -573
+ }
+push $Nfb43e800
+ Expression {
+  temp_name0 spill
+  temp_expr0 b>r?r:b
+  expr2 spill
+  expr3 b-spill
+  name blueLimitRed
+  xpos 327
+  ypos -574
+ }
+push $Nfb455400
+push $Nfb455c00
+ OFXuk.co.thefoundry.keylight.keylight_v201 {
+  show "Final Result"
+  unPreMultiply false
+  screenColour {0 0 1}
+  screenGain 1
+  screenBalance 0.95
+  alphaBias {0.5 0.5 0.5}
+  despillBias {0.5 0.5 0.5}
+  gangBiases true
+  preBlur 0
+  "Screen Matte" 0
+  screenClipMin 0
+  screenClipMax 1
+  screenClipRollback 0
+  screenGrowShrink 0
+  screenSoftness 0
+  screenDespotBlack 0
+  screenDespotWhite 0
+  screenReplaceMethod "Soft Colour"
+  screenReplaceColour {0.5 0.5 0.5}
+  Tuning 0
+  midPoint 0.5
+  lowGain 1
+  midGain 1
+  highGain 1
+  "Inside Mask" 0
+  sourceAlphaHandling Ignore
+  insideReplaceMethod "Soft Colour"
+  insideReplaceColour {0.5 0.5 0.5}
+  Crops 0
+  SourceXMethod Colour
+  SourceYMethod Colour
+  SourceEdgeColour 0
+  SourceCropL 0
+  SourceCropR 1
+  SourceCropB 0
+  SourceCropT 1
+  balanceSet false
+  insideComponent None
+  outsideComponent None
+  cacheBreaker true
+  name Keylight3
+  xpos 859
+  ypos -629
+ }
+set Nfb4bfc00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge3
+  xpos 883
+  ypos -450
+ }
+push $Nfb4bfc00
+ ShuffleCopy {
+  inputs 2
+  alpha blue
+  name ShuffleCopy5
+  xpos 773
+  ypos -450
+ }
+ Switch {
+  inputs 8
+  which {{AlgorithmChoice}}
+  name algorithmChoice1
+  xpos 624
+  ypos -451
+ }
+push $Nfb43f800
+ Dot {
+  name Dot8
+  xpos -19
+  ypos -713
+ }
+set Nfb4bec00 [stack 0]
+ Dot {
+  name Dot4
+  xpos -110
+  ypos -713
+ }
+set Nfb4be800 [stack 0]
+ Dot {
+  name Dot24
+  xpos -181
+  ypos -713
+ }
+set Nfb4be400 [stack 0]
+ Dot {
+  name Dot3
+  xpos -260
+  ypos -713
+ }
+set Nfb4be000 [stack 0]
+ Dot {
+  name Dot2
+  xpos -339
+  ypos -713
+ }
+set Nfb4e9c00 [stack 0]
+ Dot {
+  name Dot32
+  xpos -481
+  ypos -713
+ }
+set Nfb4e9800 [stack 0]
+ Dot {
+  name Dot21
+  xpos -771
+  ypos -713
+ }
+set Nfb4e9400 [stack 0]
+ Dot {
+  name Dot11
+  xpos -1042
+  ypos -713
+ }
+ Dot {
+  name Dot22
+  xpos -1042
+  ypos -474
+ }
+set Nfb4e8c00 [stack 0]
+push $Nfb4e9400
+clone $Cfb455000 {
+  xpos -705
+  ypos -651
+  selected false
+ }
+set Nfb4e8800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge4
+  xpos -779
+  ypos -478
+ }
+push $Nfb4e8800
+ ShuffleCopy {
+  inputs 2
+  alpha green
+  name ShuffleCopy6
+  xpos -669
+  ypos -478
+ }
+push $Nfb4e9800
+ Shuffle {
+  red blue
+  out hunhe
+  name Shuffle4
+  xpos -425
+  ypos -675
+ }
+push $Nfb4e9800
+ Shuffle {
+  out hunhe
+  name Shuffle3
+  xpos -603
+  ypos -677
+ }
+clone $Cfb481800 {
+  inputs 2
+  xpos -515
+  ypos -631
+  selected false
+ }
+ Expression {
+  temp_name0 spill
+  temp_expr0 g>hunhe.value?hunhe.value:g
+  expr1 spill
+  expr3 g-spill
+  name Expression1
+  xpos -515
+  ypos -584
+ }
+push $Nfb4be400
+ Expression {
+  temp_name0 spill
+  temp_expr0 g>min(r,b)?min(r,b):g
+  expr1 spill
+  expr3 g-spill
+  name greenMin
+  xpos -215
+  ypos -574
+ }
+set Nfb506c00 [stack 0]
+push $Nfb4be000
+ Expression {
+  inputs 1+1
+  temp_name0 spill
+  temp_expr0 g>max(r,b)?max(r,b):g
+  expr1 spill
+  expr3 g-spill
+  name greenMax
+  xpos -294
+  ypos -574
+ }
+push $Nfb506c00
+push $Nfb4e9c00
+ Expression {
+  temp_name0 spill
+  temp_expr0 g>((r+b)/2)?((r+b)/2):g
+  expr1 spill
+  expr3 g-spill
+  name greenAverage
+  xpos -373
+  ypos -574
+ }
+push $Nfb4bec00
+ Expression {
+  temp_name0 spill
+  temp_expr0 g>b?b:g
+  expr1 spill
+  expr3 g-spill
+  name greenLimitBlue
+  xpos -53
+  ypos -574
+ }
+push $Nfb4be800
+ Expression {
+  temp_name0 spill
+  temp_expr0 g>r?r:g
+  expr1 spill
+  expr3 g-spill
+  name greenLimitRed
+  xpos -144
+  ypos -574
+ }
+push $Nfb4e8c00
+push $Nfb4e9400
+ OFXuk.co.thefoundry.keylight.keylight_v201 {
+  show "Final Result"
+  unPreMultiply false
+  screenColour {0 1 0}
+  screenGain 1
+  screenBalance 0.5
+  alphaBias {0.5 0.5 0.5}
+  despillBias {0.5 0.5 0.5}
+  gangBiases true
+  preBlur 0
+  "Screen Matte" 0
+  screenClipMin 0
+  screenClipMax 1
+  screenClipRollback 0
+  screenGrowShrink 0
+  screenSoftness 0
+  screenDespotBlack 0
+  screenDespotWhite 0
+  screenReplaceMethod "Soft Colour"
+  screenReplaceColour {0.5 0.5 0.5}
+  Tuning 0
+  midPoint 0.5
+  lowGain 1
+  midGain 1
+  highGain 1
+  "Inside Mask" 0
+  sourceAlphaHandling Ignore
+  insideReplaceMethod "Soft Colour"
+  insideReplaceColour {0.5 0.5 0.5}
+  Crops 0
+  SourceXMethod Colour
+  SourceYMethod Colour
+  SourceEdgeColour 0
+  SourceCropL 0
+  SourceCropR 1
+  SourceCropB 0
+  SourceCropT 1
+  balanceSet false
+  insideComponent None
+  outsideComponent None
+  cacheBreaker true
+  name Keylight4
+  xpos -898
+  ypos -649
+ }
+set Nfb547800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge2
+  xpos -955
+  ypos -501
+ }
+push $Nfb547800
+ ShuffleCopy {
+  inputs 2
+  alpha green
+  name ShuffleCopy4
+  xpos -836
+  ypos -534
+ }
+ Switch {
+  inputs 8
+  which {{parent.AlgorithmChoice}}
+  name algorithmChoice
+  xpos -515
+  ypos -455
+ }
+ Switch {
+  inputs 2
+  which {{parent.ColorChoice}}
+  name colourChoice
+  xpos 20
+  ypos -321
+ }
+ Multiply {
+  channels alpha
+  value {{parent.spillmapgain}}
+  name Multiply4
+  xpos 20
+  ypos -260
+ }
+set Nfb546400 [stack 0]
+ Dot {
+  name Dot34
+  xpos -1042
+  ypos -250
+ }
+ Dot {
+  name Dot10
+  xpos -1042
+  ypos 456
+ }
+push $Nfb546400
+ Dot {
+  name Dot26
+  xpos 54
+  ypos -189
+ }
+set Nfb585800 [stack 0]
+ Dot {
+  name Dot18
+  label "  "
+  note_font "Arial Black"
+  note_font_size 16
+  xpos 55
+  ypos -6
+ }
+set Nfb585400 [stack 0]
+ Input {
+  inputs 0
+  name bg
+  xpos 190
+  ypos -147
+  number 2
+ }
+ Multiply {
+  value {{parent.bggain}}
+  name Multiply3
+  xpos 190
+  ypos -121
+ }
+ Blur {
+  size {{parent.bgsize}}
+  name Blur1
+  xpos 190
+  ypos -80
+ }
+ Saturation {
+  saturation {{parent.bgsaturation}}
+  name Saturation1
+  xpos 190
+  ypos -42
+ }
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy2
+  xpos 190
+  ypos -10
+ }
+ Premult {
+  name Premult1
+  xpos 190
+  ypos 39
+ }
+push $Nfb585400
+ Dot {
+  name Dot29
+  xpos 55
+  ypos 92
+ }
+set Nfb5ab800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation plus
+  name Multiply1
+  xpos 190
+  ypos 88
+ }
+push $Nfb585400
+push $Nfb585800
+ Dot {
+  name Dot28
+  xpos -112
+  ypos -189
+ }
+set Nfb5ab000 [stack 0]
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle2
+  xpos -146
+  ypos -95
+ }
+ Grade {
+  white {{parent.replacecolor.r} {parent.replacecolor.g} {parent.replacecolor.b} 0}
+  black_clamp false
+  name Grade3
+  knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name() == \"ReplacementChioce\" and k.value() == 2:\n n\[\"white\"].setVisible(False)\nelse:\n n\[\"white\"].setVisible(True)"
+  xpos -146
+  ypos -55
+ }
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy1
+  xpos -146
+  ypos -10
+ }
+ Premult {
+  name Premult2
+  xpos -146
+  ypos 39
+ }
+push $Nfb5ab800
+ Merge2 {
+  inputs 2
+  operation plus
+  name Multiply
+  xpos -146
+  ypos 88
+ }
+push $Nfb5ab800
+ Dot {
+  name Dot31
+  xpos 55
+  ypos 130
+ }
+push $Nfb585800
+ Dot {
+  name Dot30
+  xpos 390
+  ypos -189
+ }
+ Shuffle {
+  red black
+  green alpha
+  blue black
+  alpha black
+  name Shuffle7
+  xpos 356
+  ypos -100
+ }
+ Saturation {
+  saturation 0
+  name Saturation2
+  xpos 356
+  ypos -9
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge1
+  xpos 356
+  ypos 126
+ }
+push $Nfb5ab000
+ Dot {
+  name Dot19
+  label "  "
+  note_font "Arial Black"
+  note_font_size 16
+  xpos -308
+  ypos -190
+ }
+ Dot {
+  name Dot20
+  label "  "
+  note_font "Arial Black"
+  note_font_size 16
+  xpos -308
+  ypos 204
+ }
+ Switch {
+  inputs 4
+  which {{parent.ReplacementChoice}}
+  name Switch2
+  xpos 21
+  ypos 262
+ }
+ OCIOLogConvert {
+  operation "log to lin"
+  name OCIOLogConvert2
+  xpos 21
+  ypos 310
+  disable {{1-parent.ColorSpace}}
+ }
+ Shuffle {
+  alpha black
+  name Shuffle1
+  xpos 21
+  ypos 341
+ }
+ Dot {
+  name Dot14
+  xpos 55
+  ypos 379
+ }
+set Nfb5fd000 [stack 0]
+ Dot {
+  name Dot13
+  xpos -52
+  ypos 379
+ }
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy3
+  xpos -86
+  ypos 452
+ }
+ Dot {
+  name Dot12
+  xpos -52
+  ypos 513
+ }
+push $Nfb5fd000
+ Switch {
+  inputs 2
+  which {{outputAlpha x1 0}}
+  name outputAlpha
+  xpos 21
+  ypos 509
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  selected true
+  xpos 21
+  ypos 561
+ }
+ Output {
+  name Output1
+  xpos 21
+  ypos 714
+ }
+ Grade {
+  inputs 0
+  name Grade1
+  xpos 542
+  ypos 107
+ }
+end_group

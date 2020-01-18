@@ -1,0 +1,1067 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ inputs 4
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name()=='operationmode':\n    n\['luminancetint'].setVisible(k.getValue()==0)\n    n\['normaladditive'].setVisible(k.getValue()==1)\n    n\['theprocessedforegroundmethod'].setVisible(k.getValue()==2)"
+ addUserKnob {20 main l Main}
+ addUserKnob {26 ""}
+ addUserKnob {20 operationenv l "Operation Environment" n 1}
+ addUserKnob {4 operationmode l "           Operation Mode" M {"Luminance Tint" "Normal Additive Keyer Plus" "The Processed Foreground Method" "" "" "" ""}}
+ operationmode "Normal Additive Keyer Plus"
+ addUserKnob {4 colorspace l Colorspace -STARTLINE M {Lin Log}}
+ addUserKnob {4 screentype l "Screen Type" -STARTLINE M {Green Blue "" "" "" "" ""}}
+ addUserKnob {41 bgpreparation l "BG Preparation" T Merge10.mix}
+ addUserKnob {26 operationenvironmenttext l Attention! T "BG Preparation will be invalid when FG&CP are despilled or not input."}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 luminancetint l "Luminance Tint" -STARTLINE +HIDDEN n 1}
+ addUserKnob {26 luminancetinttext l Attention! T "Only need FG. Please make sure the alpha(A Key) of foregound is white."}
+ addUserKnob {4 keychannel l "Key Channel" M {R G B}}
+ keychannel G
+ addUserKnob {4 mergemode l "    Merge Mode" -STARTLINE M {Multiply(Dark) Plus(Bright)}}
+ addUserKnob {41 invert l "Invert Alpha" -STARTLINE T Keyer3.invert}
+ addUserKnob {41 range T Keyer3.range}
+ addUserKnob {41 luminanceenhance l "Luminance Enhance" T Grade1.white}
+ addUserKnob {41 luminancetint_1 l Tint T Grade1.multiply}
+ addUserKnob {20 endGroup_3 l endGroup n -1}
+ addUserKnob {20 normaladditive l "Normal Additive Keyer Plus" n 1}
+ addUserKnob {26 normaltext l Attention! T "Please connect FG&CP(both original/despilled) and BG, no key needed."}
+ addUserKnob {41 addmapsaturation l "Additivemap Saturation" T Saturation2.saturation}
+ addUserKnob {41 darkenhance l "Dark Enhance" T EnhanceDark.value}
+ addUserKnob {41 darktint l "Dark Tint" T TintDark.multiply}
+ addUserKnob {41 darkadd l "Dark Add" T Add4.value}
+ addUserKnob {41 brightenhance l "Bright Enhance" T EnhanceBright.value}
+ addUserKnob {41 brightentint l "Bright Tint" T TintBright.multiply}
+ addUserKnob {41 brightadd l "Bright Add" T Add1.value}
+ addUserKnob {4 additiveoperation l "AddtiveMap Operation" M {Straight "Multiply BG" ""}}
+ additiveoperation "Multiply BG"
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+ addUserKnob {20 theprocessedforegroundmethod l "The Processed Foreground Method" +HIDDEN n 1}
+ addUserKnob {26 processedtext l Attention! T "Please connect FG&CP(both original/despilled), BG and key(optional)."}
+ addUserKnob {4 despillstatus l "FG&CP Despill Status" M {"Both despilled" "Both original"}}
+ addUserKnob {4 keysource l "Key Source" M {"External input" "Internal generation" "" "" "" ""}}
+ addUserKnob {41 processedmultiply l "Foreground Tint" T Grade6.multiply}
+ addUserKnob {41 processedgain l "Foreground Gain" T Grade6.white}
+ addUserKnob {41 processedgamma l "Foreground Gamma" T Grade6.gamma}
+ addUserKnob {41 processeddissolve l "FGBG Dissolve" T Dissolve1.which}
+ addUserKnob {20 endGroup_2 l endGroup n -1}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_AdditiveKeyer v1.1\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ StickyNote {
+  inputs 0
+  name StickyNote3
+  label 将multiply,add调整为0可以关闭该通道
+  xpos -1309
+  ypos -1305
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label "Additive map产生模块"
+  xpos -1268
+  ypos -1589
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote4
+  label 可接受已溢色和未溢色
+  xpos -1267
+  ypos -1614
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote2
+  label 针对亮部或暗部mask的Add功能
+  xpos -1296
+  ypos -1187
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote5
+  label 合成方法选择：直接，乘背景
+  xpos -1374
+  ypos -1091
+ }
+ Multiply {
+  inputs 0
+  name Multiply1
+  xpos -1427
+  ypos -1872
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote6
+  label "利用despill map得出简单的alpha"
+  xpos 131
+  ypos -1574
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote7
+  label "利用despill map得出简单的alpha"
+  xpos 623
+  ypos -1572
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote8
+  label 蓝幕
+  xpos 650
+  ypos -1601
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote9
+  label 绿幕
+  xpos 168
+  ypos -1602
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote11
+  label 变亮的用加，变暗的因为这里没有负值，那么就反向乘吧
+  xpos -2067
+  ypos -1117
+ }
+ Input {
+  inputs 0
+  name key
+  xpos -242
+  ypos -1994
+  number 3
+ }
+ Log2Lin {
+  operation lin2log
+  name Log2Lin1
+  xpos -242
+  ypos -1905
+  disable {{parent.colorspace==0?1:0 x67 1}}
+ }
+ set Cde518000 [stack 0]
+ Dot {
+  name Dot4
+  xpos -208
+  ypos -1651
+ }
+set Nde535c00 [stack 0]
+ Dot {
+  name Dot8
+  xpos -1087
+  ypos -1651
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote10
+  label 增加选通道功能
+  xpos -2211
+  ypos -1562
+ }
+ Input {
+  inputs 0
+  name fg
+  xpos -993
+  ypos -1995
+ }
+clone $Cde518000 {
+  xpos -993
+  ypos -1909
+  selected false
+ }
+ Dot {
+  name Dot1
+  xpos -959
+  ypos -1749
+ }
+set Nde534800 [stack 0]
+ Dot {
+  name Dot16
+  xpos 117
+  ypos -1749
+ }
+set Nde534400 [stack 0]
+ Dot {
+  name Dot26
+  xpos 609
+  ypos -1749
+ }
+set Nde534000 [stack 0]
+ Dot {
+  name Dot28
+  xpos 609
+  ypos -1585
+ }
+set Nde54fc00 [stack 0]
+ Dot {
+  name Dot29
+  xpos 513
+  ypos -1585
+ }
+ Dot {
+  name Dot30
+  xpos 513
+  ypos -1427
+ }
+push $Nde54fc00
+ OFXuk.co.thefoundry.keylight.keylight_v201 {
+  show "Final Result"
+  unPreMultiply false
+  screenColour {0 0 1}
+  screenGain 1
+  screenBalance 0.95
+  alphaBias {0.5 0.5 0.5}
+  despillBias {0.5 0.5 0.5}
+  gangBiases true
+  preBlur 0
+  "Screen Matte" 0
+  screenClipMin 0
+  screenClipMax 1
+  screenClipRollback 0
+  screenGrowShrink 0
+  screenSoftness 0
+  screenDespotBlack 0
+  screenDespotWhite 0
+  screenReplaceMethod "Soft Colour"
+  screenReplaceColour {0.5 0.5 0.5}
+  Tuning 0
+  midPoint 0.5
+  lowGain 1
+  midGain 1
+  highGain 1
+  "Inside Mask" 0
+  sourceAlphaHandling Ignore
+  insideReplaceMethod "Soft Colour"
+  insideReplaceColour {0.5 0.5 0.5}
+  Crops 0
+  SourceXMethod Colour
+  SourceYMethod Colour
+  SourceEdgeColour 0
+  SourceCropL 0
+  SourceCropR 1
+  SourceCropB 0
+  SourceCropT 1
+  balanceSet false
+  insideComponent None
+  outsideComponent None
+  cacheBreaker true
+  name Keylight3
+  xpos 575
+  ypos -1516
+ }
+ set Cde54f000 [stack 0]
+set Nde54f000 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge7
+  xpos 575
+  ypos -1431
+ }
+ Saturation {
+  saturation 0
+  name Saturation7
+  xpos 575
+  ypos -1365
+ }
+ Input {
+  inputs 0
+  name cp
+  xpos -483
+  ypos -1995
+  number 2
+ }
+clone $Cde518000 {
+  xpos -483
+  ypos -1906
+  selected false
+ }
+ Dot {
+  name Dot3
+  xpos -449
+  ypos -1686
+ }
+set Nde57dc00 [stack 0]
+ Dot {
+  name Dot19
+  xpos 286
+  ypos -1686
+ }
+set Nde57d800 [stack 0]
+ Dot {
+  name Dot27
+  xpos 778
+  ypos -1686
+ }
+set Nde57d400 [stack 0]
+ Dot {
+  name Dot31
+  xpos 778
+  ypos -1583
+ }
+set Nde57d000 [stack 0]
+ Dot {
+  name Dot32
+  xpos 888
+  ypos -1583
+ }
+ Dot {
+  name Dot33
+  xpos 888
+  ypos -1427
+ }
+push $Nde57d000
+clone $Cde54f000 {
+  xpos 744
+  ypos -1516
+  selected false
+ }
+set Nde57c400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge8
+  xpos 744
+  ypos -1431
+ }
+ Saturation {
+  saturation 0
+  name Saturation8
+  xpos 744
+  ypos -1365
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge9
+  xpos 657
+  ypos -1284
+ }
+push $Nde534400
+ Dot {
+  name Dot20
+  xpos 117
+  ypos -1587
+ }
+set Nde599400 [stack 0]
+ Dot {
+  name Dot22
+  xpos 21
+  ypos -1587
+ }
+ Dot {
+  name Dot21
+  xpos 21
+  ypos -1429
+ }
+push $Nde599400
+ OFXuk.co.thefoundry.keylight.keylight_v201 {
+  show "Final Result"
+  unPreMultiply false
+  screenColour {0 1 0}
+  screenGain 1
+  screenBalance 0.5
+  alphaBias {0.5 0.5 0.5}
+  despillBias {0.5 0.5 0.5}
+  gangBiases true
+  preBlur 0
+  "Screen Matte" 0
+  screenClipMin 0
+  screenClipMax 1
+  screenClipRollback 0
+  screenGrowShrink 0
+  screenSoftness 0
+  screenDespotBlack 0
+  screenDespotWhite 0
+  screenReplaceMethod "Soft Colour"
+  screenReplaceColour {0.5 0.5 0.5}
+  Tuning 0
+  midPoint 0.5
+  lowGain 1
+  midGain 1
+  highGain 1
+  "Inside Mask" 0
+  sourceAlphaHandling Ignore
+  insideReplaceMethod "Soft Colour"
+  insideReplaceColour {0.5 0.5 0.5}
+  Crops 0
+  SourceXMethod Colour
+  SourceYMethod Colour
+  SourceEdgeColour 0
+  SourceCropL 0
+  SourceCropR 1
+  SourceCropB 0
+  SourceCropT 1
+  balanceSet false
+  insideComponent None
+  outsideComponent None
+  cacheBreaker true
+  name Keylight2
+  xpos 83
+  ypos -1518
+ }
+ set Cde598800 [stack 0]
+set Nde598800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge2
+  xpos 83
+  ypos -1433
+ }
+ Saturation {
+  saturation 0
+  name Saturation5
+  xpos 83
+  ypos -1367
+ }
+push $Nde57d800
+ Dot {
+  name Dot24
+  xpos 286
+  ypos -1585
+ }
+set Nde5cbc00 [stack 0]
+ Dot {
+  name Dot25
+  xpos 396
+  ypos -1585
+ }
+ Dot {
+  name Dot23
+  xpos 396
+  ypos -1429
+ }
+push $Nde5cbc00
+clone $Cde598800 {
+  xpos 252
+  ypos -1518
+  selected false
+ }
+set Nde5cb000 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge5
+  xpos 252
+  ypos -1433
+ }
+ Saturation {
+  saturation 0
+  name Saturation6
+  xpos 252
+  ypos -1367
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge6
+  xpos 164
+  ypos -1284
+ }
+ Switch {
+  inputs 2
+  which {{parent.screentype}}
+  name Switch2
+  xpos 422
+  ypos -1284
+ }
+ set Cde5ca000 [stack 0]
+ Shuffle {
+  alpha blue
+  name Shuffle3
+  xpos 422
+  ypos -1240
+ }
+set Nde5f1c00 [stack 0]
+ Dot {
+  name Dot40
+  xpos 456
+  ypos -1827
+ }
+ Input {
+  inputs 0
+  name bg
+  xpos -633
+  ypos -1992
+  number 1
+ }
+clone $Cde518000 {
+  xpos -633
+  ypos -1905
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  mix 0
+  name Merge10
+  xpos -633
+  ypos -1831
+ }
+ Dot {
+  name Dot2
+  xpos -600
+  ypos -1717
+ }
+set Nde5f0800 [stack 0]
+ Dot {
+  name Dot18
+  xpos 1179
+  ypos -1717
+ }
+ PostageStamp {
+  name BG3
+  xpos 1145
+  ypos -1017
+  postage_stamp true
+ }
+set Nde5f0000 [stack 0]
+push $Nde5f1c00
+ Dot {
+  name Dot35
+  xpos 456
+  ypos -1205
+ }
+ Invert {
+  name Invert1
+  xpos 748
+  ypos -1215
+ }
+push $Nde535c00
+ Dot {
+  name Dot17
+  xpos 318
+  ypos -1651
+ }
+ Dot {
+  name Dot34
+  xpos 1023
+  ypos -1651
+ }
+ Switch {
+  inputs 2
+  which {{parent.keysource}}
+  name Switch3
+  xpos 989
+  ypos -1209
+ }
+ PostageStamp {
+  name Key_Alpha3
+  xpos 989
+  ypos -1019
+  postage_stamp true
+ }
+ Invert {
+  name Invert4
+  xpos 989
+  ypos -924
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle9
+  xpos 989
+  ypos -868
+ }
+ Dot {
+  name Dot65
+  xpos 1023
+  ypos -832
+ }
+set Nde63dc00 [stack 0]
+ Dot {
+  name Dot67
+  xpos 1023
+  ypos -713
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge20
+  xpos 1145
+  ypos -717
+ }
+push $Nde54f000
+push $Nde598800
+clone $Cde5ca000 {
+  inputs 2
+  xpos 291
+  ypos -1152
+  selected false
+ }
+ Dot {
+  name Dot38
+  xpos 325
+  ypos -1074
+ }
+push $Nde534000
+ Dot {
+  name Dot37
+  xpos 1416
+  ypos -1749
+ }
+ Switch {
+  inputs 2
+  which {{parent.despillstatus}}
+  name Switch6
+  xpos 1382
+  ypos -1078
+ }
+ set Cde63c400 [stack 0]
+ PostageStamp {
+  name Despilled_FG3
+  xpos 1382
+  ypos -1015
+  postage_stamp true
+ }
+push $Nde63dc00
+push $Nde57c400
+push $Nde5cb000
+clone $Cde5ca000 {
+  inputs 2
+  xpos 571
+  ypos -1147
+  selected false
+ }
+push $Nde57d400
+ Dot {
+  name Dot36
+  xpos 1290
+  ypos -1686
+ }
+clone $Cde63c400 {
+  inputs 2
+  xpos 1256
+  ypos -1147
+  selected false
+ }
+ PostageStamp {
+  name Despilled_Cleanplate3
+  xpos 1256
+  ypos -1017
+  postage_stamp true
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge21
+  xpos 1256
+  ypos -836
+ }
+ Dot {
+  name Dot69
+  xpos 1290
+  ypos -793
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge22
+  xpos 1382
+  ypos -797
+ }
+ Grade {
+  multiply {1 1 1 1}
+  black_clamp false
+  name Grade6
+  xpos 1382
+  ypos -759
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge24
+  xpos 1382
+  ypos -717
+ }
+push $Nde5f0000
+ Dot {
+  name Dot39
+  xpos 1179
+  ypos -661
+ }
+ Dissolve {
+  inputs 2
+  which 1
+  name Dissolve1
+  xpos 1382
+  ypos -671
+ }
+push $Nde5f0800
+ Dot {
+  name Dot13
+  xpos -1031
+  ypos -1717
+ }
+ Dot {
+  name Dot6
+  xpos -1543
+  ypos -1717
+ }
+set Nde684c00 [stack 0]
+ Dot {
+  name Dot14
+  xpos -1543
+  ypos -1141
+ }
+set Nde684800 [stack 0]
+ Dot {
+  name Dot15
+  xpos -1543
+  ypos -990
+ }
+push $Nde684800
+push $Nde534800
+ Dot {
+  name Dot5
+  xpos -1302
+  ypos -1749
+ }
+set Nde684000 [stack 0]
+ Dot {
+  name Dot12
+  xpos -1302
+  ypos -1612
+ }
+push $Nde57dc00
+ Dot {
+  name Dot7
+  xpos -1139
+  ypos -1686
+ }
+ Dot {
+  name Dot11
+  xpos -1139
+  ypos -1611
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge1
+  xpos -1255
+  ypos -1563
+ }
+set Nde6a1000 [stack 0]
+ Shuffle {
+  red black
+  green black
+  blue black
+  alpha black
+  name Shuffle2
+  xpos -1464
+  ypos -1563
+ }
+push $Nde6a1000
+ Clamp {
+  minimum -1000
+  maximum 0
+  name Clamp3
+  xpos -1348
+  ypos -1506
+ }
+ Merge2 {
+  inputs 2
+  operation difference
+  name Merge4
+  xpos -1464
+  ypos -1421
+ }
+ Saturation {
+  saturation 0
+  name Saturation3
+  xpos -1464
+  ypos -1358
+ }
+ Dot {
+  name Dot10
+  xpos -1430
+  ypos -1260
+ }
+push $Nde6a1000
+ Saturation {
+  saturation 0
+  name Saturation2
+  xpos -1255
+  ypos -1469
+ }
+set Nde6d3800 [stack 0]
+ Clamp {
+  minimum -1000
+  maximum 0
+  name Clamp4
+  xpos -1355
+  ypos -1427
+ }
+ Multiply {
+  name EnhanceDark
+  xpos -1355
+  ypos -1344
+ }
+ Grade {
+  multiply {1 1 1 1}
+  black_clamp false
+  name TintDark
+  xpos -1355
+  ypos -1275
+ }
+ Add {
+  inputs 1+1
+  channels rgb
+  value 0.7
+  maskChannelMask rgba.red
+  name Add4
+  xpos -1355
+  ypos -1209
+ }
+push $Nde6a1000
+ Shuffle {
+  red black
+  green black
+  blue black
+  alpha black
+  name Shuffle1
+  xpos -1065
+  ypos -1563
+ }
+push $Nde6a1000
+ Clamp {
+  name Clamp1
+  xpos -1167
+  ypos -1506
+ }
+ Merge2 {
+  inputs 2
+  operation difference
+  name Merge3
+  xpos -1065
+  ypos -1423
+ }
+ Saturation {
+  saturation 0
+  name Saturation1
+  xpos -1065
+  ypos -1352
+ }
+ Dot {
+  name Dot9
+  xpos -1031
+  ypos -1268
+ }
+push $Nde6d3800
+ Clamp {
+  name Clamp2
+  xpos -1164
+  ypos -1429
+ }
+ Multiply {
+  name EnhanceBright
+  xpos -1164
+  ypos -1346
+ }
+ Grade {
+  multiply {1 1 1 1}
+  black_clamp false
+  name TintBright
+  xpos -1164
+  ypos -1275
+ }
+ Add {
+  inputs 1+1
+  channels rgb
+  value 0.7
+  maskChannelMask rgba.red
+  name Add1
+  xpos -1164
+  ypos -1209
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Plus
+  xpos -1248
+  ypos -1145
+ }
+set Nde70a000 [stack 0]
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Multiply
+  xpos -1484
+  ypos -1145
+ }
+push $Nde70a000
+ Switch {
+  inputs 2
+  which {{parent.additiveoperation x67 0.645}}
+  name Switch7
+  xpos -1351
+  ypos -1065
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Plus1
+  xpos -1351
+  ypos -994
+ }
+push $Nde684000
+ Dot {
+  name Dot44
+  xpos -1830
+  ypos -1749
+ }
+ Dot {
+  name Dot41
+  xpos -1830
+  ypos -1678
+ }
+ Dot {
+  name Dot42
+  xpos -1900
+  ypos -1678
+ }
+set Neb812800 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name B
+  xpos -1833
+  ypos -1559
+ }
+push $Neb812800
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name G
+  xpos -1934
+  ypos -1560
+ }
+push $Neb812800
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name R
+  xpos -2032
+  ypos -1561
+ }
+ Switch {
+  inputs 3
+  which {{parent.keychannel}}
+  name Switch9
+  xpos -1934
+  ypos -1512
+ }
+ Keyer {
+  invert true
+  operation "luminance key"
+  range {0.6105969546 0.6303881215 1 1}
+  name Keyer3
+  xpos -1934
+  ypos -1468
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle6
+  xpos -1934
+  ypos -1406
+ }
+set Neb83b000 [stack 0]
+ Dot {
+  name Dot49
+  xpos -1900
+  ypos -1235
+ }
+ Dot {
+  name Dot45
+  xpos -2201
+  ypos -1235
+ }
+ Dot {
+  name Dot46
+  xpos -2201
+  ypos -1068
+ }
+push $Neb83b000
+ Grade {
+  white 0.16
+  multiply {1 1 1 1}
+  name Grade1
+  xpos -1872
+  ypos -1359
+ }
+ set Ceb83a000 [stack 0]
+ Dot {
+  name Dot48
+  xpos -1838
+  ypos -1154
+ }
+push $Neb83b000
+clone $Ceb83a000 {
+  xpos -1996
+  ypos -1358
+  selected false
+ }
+ Invert {
+  name Invert2
+  xpos -1996
+  ypos -1313
+ }
+ Dot {
+  name Dot43
+  xpos -1962
+  ypos -1252
+ }
+push $Nde684c00
+ Dot {
+  name Dot47
+  xpos -2104
+  ypos -1717
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Multiply4
+  xpos -2138
+  ypos -1256
+  disable {{parent.mergemode}}
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Plus2
+  xpos -2138
+  ypos -1158
+  disable {{1-Multiply4.disable}}
+ }
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy1
+  xpos -2138
+  ypos -1072
+ }
+ Switch {
+  inputs 3
+  which {{parent.operationmode}}
+  name Switch8
+  xpos -307
+  ypos -149
+ }
+ Log2Lin {
+  name Log2Lin5
+  xpos -307
+  ypos -61
+  disable {{parent.colorspace==0?1:0}}
+ }
+ Output {
+  name Output1
+  selected true
+  xpos -307
+  ypos 18
+ }
+end_group

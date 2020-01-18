@@ -1,0 +1,308 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ inputs 2
+ knobChanged "tn=nuke.thisNode()\ntk=nuke.thisKnob()\n\nif tk.name()=='mode':\n    tn\['ibk'].setVisible(tk.getValue()==0)\n    tn\['attention'].setVisible(tk.getValue()==1)"
+ addUserKnob {20 main l Main}
+ addUserKnob {26 step1 l "Step1_First key"}
+ addUserKnob {4 mode l Mode M {IBK "Input Alpha" ""}}
+ addUserKnob {6 aliasing l Aliasing -STARTLINE}
+ aliasing true
+ addUserKnob {20 ibk l IBK n 1}
+ addUserKnob {41 screen_type l "screen type" T ibkkeymoudle.screen_type}
+ addUserKnob {41 off l darks T ibkkeymoudle.off}
+ addUserKnob {41 mult l lights T ibkkeymoudle.mult}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 attention l Attention +HIDDEN T "Please connect alpha with hardmatte(may keylight/roto...)."}
+ addUserKnob {26 step2 l Step2_Blur&Grow}
+ addUserKnob {41 size l erode T FilterErode1.size}
+ addUserKnob {14 blursize l "Blur Size" R 0 100}
+ blursize 53
+ addUserKnob {4 step l Step -STARTLINE M {1 2 3 4 5 6 7 8 9 10}}
+ step 5
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_KeyingColour v1.0\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label "may be roto, primatte or anything else."
+  xpos 162
+  ypos 68
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote2
+  label Aliasing
+  xpos -89
+  ypos 131
+ }
+ Input {
+  inputs 0
+  name alpha
+  xpos 212
+  ypos 43
+  number 1
+ }
+ Input {
+  inputs 0
+  name src
+  xpos 0
+  ypos -223
+ }
+set Nfbfc2000 [stack 0]
+ Group {
+  name ibkkeymoudle
+  help "This node provides IBKGizmo a colour reference in which to base its keying algorithm on a per pixel basis.\nThe idea is to remove the foreground image and only leave the shades and hues of the original blue/greenscreen.\nAttach the output of this node to the 'c' input of a default IBKGizmo. Attach the input of this node along with the 'fg' input of the IBKGizmo to the original screen.\nPick which colour your screen type is in both nodes and then while viewing the alpha output from the IBKGizmo lower the darks.b (if a bluescreen - adjust darks.g if a greenscreen) in this node \nuntil you see a change in the garbage area of the matte. Once you see a change then you have gone too far -back off a step. If you are still left with discoloured edges you can use the other colours in the lights and darks to eliminate them. Remember the idea is \nto be left with the original shades of the screen and the foreground blacked out. While swapping between viewing the matte from the IBKGizmo and the rgb output of this IBKColour adjust the other colours \nuntil you see a change in the garbage area of the matte. Simple rule of thumb - if you have a light red discoloured area increase the lights.r - if you have a dark green discoloured area increase darks.g. If your screen does not have a very saturated hue you may still be left\n with areas of discolouration after the above process. The 'erode' slider can help with this - while viewing the rgb output adjust the erode until those areas disappear.\nThe 'patch black' slider allows you to fill in the black areas with screen colour. This is not always necessary but if you see blue squares in your composite increase this value and it'll fix it.\nThe above is the only real workflow for this node - working from the top parameter to the bottom parameter- going back to tweak darks/lights with 'erode' and 'patch black' activated isn't really gonna work. "
+  tile_color 0x990000
+  xpos -2
+  ypos -57
+  addUserKnob {20 "" l Parameters}
+  addUserKnob {41 screen_type l "screen type" T IBK2.screen_type}
+  addUserKnob {18 off l darks t "adjust the colour values to get the best separation between black and the screen type colour.\nYou want to be left with only shades of the screen colour and black. \nIf a green screen is selected start by bringing down darks->green\nIf a blue screen is selected start by bringing down darks->blue" R -1 1}
+  off {0 0 0}
+  addUserKnob {6 off_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 off_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 off_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 mult l lights t "adjust the colour values to get the best separation between black and the screen type colour.\nYou want to be left with only shades of the screen colour and black. \nIf a green screen is selected start by bringing down darks->green\nIf a blue screen is selected start by bringing down darks->blue" R 0 2}
+  mult {1 1 1}
+  addUserKnob {6 mult_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 mult_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 mult_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {26 ""}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos -31
+   ypos -109
+  }
+  Grade {
+   multiply {{mult.r} {mult.g} {mult.b} {curve}}
+   add {{off.r} {off.g} {off.b} {curve}}
+   name Grade11
+   tile_color 0x7aa9ff00
+   xpos -31
+   ypos 94
+  }
+  Clamp {
+   maximum_enable false
+   name Clamp2
+   xpos -31
+   ypos 160
+  }
+set Nfc00b400 [stack 0]
+push $Nfc00b400
+push $Nfc00b400
+  IBK {
+   inputs 3
+   screen_type green
+   blue_green_weight 1
+   luma 1
+   name IBK2
+   tile_color 0xff00
+   xpos -31
+   ypos 247
+  }
+  Output {
+   name Output1
+   xpos -31
+   ypos 424
+  }
+ end_group
+ Switch {
+  inputs 2
+  which {{parent.mode}}
+  name Switch1
+  xpos -2
+  ypos 43
+ }
+ FilterErode {
+  size -7
+  name FilterErode1
+  xpos -2
+  ypos 79
+ }
+ Clamp {
+  channels alpha
+  maximum 0
+  MinClampTo_enable true
+  MaxClampTo_enable true
+  name Clamp1
+  xpos -2
+  ypos 125
+ }
+set Nfc031c00 [stack 0]
+ Dot {
+  name Dot17
+  xpos 163
+  ypos 135
+ }
+ Dot {
+  name Dot21
+  xpos 163
+  ypos 368
+ }
+set Nfc031400 [stack 0]
+push $Nfc031400
+push $Nfc031400
+push $Nfc031400
+push $Nfc031400
+push $Nfc031400
+push $Nfc031400
+push $Nfc031400
+push $Nfc031400
+push $Nfc031c00
+ Invert {
+  channels alpha
+  name Invert1
+  xpos -2
+  ypos 170
+ }
+push $Nfbfc2000
+ Dot {
+  name Dot1
+  xpos -112
+  ypos -219
+ }
+ Dot {
+  name Dot2
+  xpos -112
+  ypos 217
+ }
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy1
+  xpos -2
+  ypos 213
+ }
+ Premult {
+  name Premult1
+  xpos -2
+  ypos 239
+ }
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur2
+  xpos -2
+  ypos 268
+ }
+set Nfc057c00 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur3
+  xpos -2
+  ypos 294
+ }
+set Nfc057800 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur13
+  xpos -2
+  ypos 320
+ }
+set Nfc057400 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur14
+  xpos -2
+  ypos 346
+ }
+set Nfc057000 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur15
+  xpos -2
+  ypos 372
+ }
+set Nfc056c00 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur16
+  xpos -2
+  ypos 398
+ }
+set Nfc056800 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.blursize}}
+  name Blur17
+  xpos -2
+  ypos 424
+ }
+set Nfc056400 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur18
+  xpos -2
+  ypos 450
+ }
+set Nfc056000 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur19
+  xpos -2
+  ypos 476
+ }
+set Nfc08fc00 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blursize}}
+  name Blur20
+  xpos -2
+  ypos 502
+ }
+push $Nfc08fc00
+push $Nfc056000
+push $Nfc056400
+push $Nfc056800
+push $Nfc056c00
+push $Nfc057000
+push $Nfc057400
+push $Nfc057800
+push $Nfc057c00
+ Switch {
+  inputs 10
+  which {{parent.step}}
+  name Switch2
+  xpos -170
+  ypos 398
+ }
+ Unpremult {
+  name Unpremult2
+  xpos -170
+  ypos 494
+ }
+ Output {
+  name Output1
+  xpos -170
+  ypos 608
+ }
+push $Nfbfc2000
+push $Nfbfc2000
+ Viewer {
+  inputs 2
+  frame_range 1-100
+  name Viewer1
+  xpos -449
+  ypos 23
+ }
+end_group

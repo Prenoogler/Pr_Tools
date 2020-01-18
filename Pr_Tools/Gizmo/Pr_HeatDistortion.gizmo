@@ -1,0 +1,102 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ addUserKnob {20 main l Main}
+ addUserKnob {26 noise l Noise}
+ addUserKnob {41 size l x/ysize T control.size}
+ addUserKnob {7 velocity}
+ velocity 0.18
+ addUserKnob {26 distortion l "Distortion Option"}
+ addUserKnob {41 uv_scale l Amount T IDistort1.uv_scale}
+ addUserKnob {26 turburlence l Turburlence}
+ addUserKnob {12 keyframe}
+ keyframe {10 60}
+ addUserKnob {26 attention l Attention T "Please set turbulence(direction and velocity) keyframe here if needed."}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_HeatDistortion v1.0\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ Noise {
+  inputs 0
+  cliptype none
+  size {{parent.control.size+5}}
+  zoffset {{parent.control.zoffset x15 4.14}}
+  lacunarity 1
+  translate {{parent.keyframe} {parent.keyframe}}
+  center {960 506}
+  name u
+  xpos -256
+  ypos -34
+ }
+set Nfbf72c00 [stack 0]
+ Noise {
+  inputs 0
+  size {{parent.control.size-5}}
+  zoffset {{parent.control.zoffset x15 4.14}}
+  lacunarity 1
+  translate {{parent.keyframe} {parent.keyframe}}
+  center {960 506}
+  name v
+  selected true
+  xpos -96
+  ypos -36
+ }
+set Nfbf72800 [stack 0]
+ ShuffleCopy {
+  inputs 2
+  red red
+  out forward
+  name ShuffleCopy1
+  xpos -174
+  ypos 39
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos 0
+  ypos -157
+ }
+ ShuffleCopy {
+  inputs 2
+  in forward
+  red red
+  green green
+  out forward
+  name ShuffleCopy2
+  xpos 0
+  ypos 39
+ }
+ IDistort {
+  channels rgba
+  uv forward
+  uv_scale 21
+  name IDistort1
+  xpos 0
+  ypos 115
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 300
+ }
+ Noise {
+  inputs 0
+  size 130
+  zoffset {{frame*parent.velocity}}
+  lacunarity 1
+  center {960 506}
+  name control
+  xpos -173
+  ypos -94
+ }
+push $Nfbf72800
+push $Nfbf72c00
+ Viewer {
+  inputs 2
+  frame 37
+  frame_range 1-100
+  name Viewer1
+  xpos -132
+  ypos 374
+ }
+end_group

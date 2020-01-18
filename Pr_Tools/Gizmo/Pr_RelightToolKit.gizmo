@@ -1,0 +1,370 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ inputs 3
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name()=='mode':\n    n\['mode1'].setVisible(k.getValue()==0)\n    n\['mode2'].setVisible(k.getValue()==1)"
+ addUserKnob {20 main l Main}
+ addUserKnob {26 operaenv l "Operation Environment"}
+ addUserKnob {41 normal l "Normal Vectors" T ReLight4.normal}
+ addUserKnob {41 position l "Point Positions" T ReLight4.position}
+ addUserKnob {20 light l Light n 1}
+ light 0
+ addUserKnob {20 colorandintensity l "   Color and Intensity" n 1}
+ addUserKnob {4 mode l Mode M {"Constant Color and Auto Remap Intensity" "Animated Color and Constant Intensity" "" ""}}
+ mode "Animated Color and Constant Intensity"
+ addUserKnob {20 mode1 l "          Constant Color and Auto Remap Intensity" +HIDDEN n 1}
+ addUserKnob {41 color_rgb l "Light Color" T NoOp1.color_rgb}
+ addUserKnob {26 mode1attention l Attention! T "Please Paste Intensity Animation Below and Click Button."}
+ addUserKnob {41 curveValue l "Animation Curve" T bm_CurveRemapper.curveValue}
+ addUserKnob {41 autoMinMax l "Auto Remap Intensity" -STARTLINE T bm_CurveRemapper.autoMinMax}
+ addUserKnob {41 intensity l Intensity T NoOp1.intensity}
+ addUserKnob {41 final l "Final Intensity FYR" T NoOp1.final}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 mode2 l "          Animated Color and Constant Intensity" n 1}
+ addUserKnob {41 color_rgb_1 l "Light Color" T NoOp1.color_rgb}
+ addUserKnob {41 intensity_1 l Intensity T NoOp1.intensity}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+ addUserKnob {20 endGroup_4 l endGroup n -1}
+ addUserKnob {20 lightposition l "   Light Position" n 1}
+ addUserKnob {26 lightpositionattention l Attention! T "You can press tab key to adjust light position in 3D."}
+ addUserKnob {41 translate T Animated_Color_and_Constant_Intensity.translate}
+ addUserKnob {41 rotate T Animated_Color_and_Constant_Intensity.rotate}
+ addUserKnob {41 scaling l scale T Animated_Color_and_Constant_Intensity.scaling}
+ addUserKnob {20 endGroup_2 l endGroup n -1}
+ addUserKnob {20 endGroup_3 l endGroup n -1}
+ addUserKnob {20 material l Material n 1}
+ material 0
+ addUserKnob {41 emission T BasicMaterial5.emission}
+ addUserKnob {41 diffuse T BasicMaterial5.diffuse}
+ addUserKnob {41 specular T BasicMaterial5.specular}
+ addUserKnob {41 min_shininess l "min shininess" T BasicMaterial5.min_shininess}
+ addUserKnob {41 max_shininess l "max shininess" T BasicMaterial5.max_shininess}
+ addUserKnob {20 endGroup_5 l endGroup n -1}
+ addUserKnob {26 comop l "Compositing Option"}
+ addUserKnob {6 antialiasing l Anti-Aliasing +STARTLINE}
+ antialiasing true
+ addUserKnob {6 softlight l Soft-Light -STARTLINE}
+ addUserKnob {6 multiao l "Multiply AO Channel" +STARTLINE}
+ multiao true
+ addUserKnob {41 in l "" -STARTLINE T Shuffle9.in}
+ addUserKnob {6 plus l "Plus Original Src" +STARTLINE}
+ plus true
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_RelightToolKit v1.0\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ StickyNote {
+  inputs 0
+  name StickyNote6
+  label "可选 optional"
+  xpos 555
+  ypos 483
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote10
+  label 模式3，适合比较复杂的情况，建议解包使用。
+  xpos -509
+  ypos 139
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote13
+  label 可选项
+  xpos 1024
+  ypos 636
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote12
+  label 可选项
+  xpos 856
+  ypos 636
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote3
+  label 模式1，2，一是输入颜色（需要带animation），此时只需调节intensity，二是固定颜色模式，需要输入curve（经0saturation处理的），自动计算factor，需要手动调节intensity和固定颜色
+  xpos -512
+  ypos 93
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote7
+  label 可调节
+  xpos 515
+  ypos 284
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label 可选项
+  xpos -139
+  ypos 548
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote9
+  label 需要注意，Relight只用于产生新的diffuse和specular，像reflection、refraction等等是不包括其中的
+  xpos 495
+  ypos 25
+ }
+ Input {
+  inputs 0
+  name cam
+  xpos 604
+  ypos 384
+  number 1
+ }
+ Dot {
+  name Dot40
+  xpos 638
+  ypos 518
+ }
+ Input {
+  inputs 0
+  name src
+  xpos 403
+  ypos 79
+  number 2
+ }
+set Nfc256800 [stack 0]
+ Dot {
+  name Dot43
+  xpos 739
+  ypos 83
+ }
+set Nfc256400 [stack 0]
+ Dot {
+  name Dot47
+  xpos 889
+  ypos 83
+ }
+set Nfc256000 [stack 0]
+ Dot {
+  name Dot45
+  xpos 1054
+  ypos 83
+ }
+push $Nfc256000
+ Shuffle {
+  in none
+  name Shuffle9
+  xpos 855
+  ypos 341
+ }
+ BasicMaterial {
+  inputs 0
+  diffuse 0.2
+  specular 0.2
+  name BasicMaterial5
+  xpos 512
+  ypos 251
+ }
+ Dot {
+  name Dot41
+  xpos 546
+  ypos 429
+ }
+push 0
+ Input {
+  inputs 0
+  name card
+  xpos -142
+  ypos 514
+ }
+ Light2 {
+  inputs 0
+  color {{parent.NoOp1.color_rgb} {parent.NoOp1.color_rgb} {parent.NoOp1.color_rgb}}
+  intensity {{parent.NoOp1.intensity}}
+  translate {0 184 -403}
+  depthmap_slope_bias 0.01
+  name Animated_Color_and_Constant_Intensity
+  xpos -130
+  ypos 278
+  disable true
+ }
+ Light2 {
+  inputs 0
+  color {{parent.NoOp1.color_rgb} {parent.NoOp1.color_rgb} {parent.NoOp1.color_rgb}}
+  intensity {{parent.NoOp1.final}}
+  translate {{parent.Animated_Color_and_Constant_Intensity.translate x14 0 x20 0 x29 0 x32 -18.20000076} {parent.Animated_Color_and_Constant_Intensity.translate x14 9.5 x20 88.59999847 x29 172.8000031 x32 192.8000031} {parent.Animated_Color_and_Constant_Intensity.translate x14 -240 x20 -240 x29 -240 x32 -240}}
+  rotate {{parent.Animated_Color_and_Constant_Intensity.rotate} {parent.Animated_Color_and_Constant_Intensity.rotate} {parent.Animated_Color_and_Constant_Intensity.rotate}}
+  scaling {{parent.Animated_Color_and_Constant_Intensity.scaling} {parent.Animated_Color_and_Constant_Intensity.scaling} {parent.Animated_Color_and_Constant_Intensity.scaling}}
+  depthmap_slope_bias 0.01
+  name Constant_Color_and_Auto_Remap_Intensity
+  xpos 101
+  ypos 282
+ }
+push $Nfc256800
+ Dot {
+  name Dot39
+  xpos 437
+  ypos 333
+ }
+set Nfc693800 [stack 0]
+ PositionToPoints2 {
+  display textured
+  render_mode textured
+  P_channel {{{parent.ReLight4.position}}}
+  N_channel {{{parent.ReLight4.normal}}}
+  name PositionToPoints3
+  xpos 248
+  ypos 329
+ }
+ Scene {
+  inputs 4
+  name Scene3
+  xpos 258
+  ypos 494
+ }
+push $Nfc693800
+ Reformat {
+  type scale
+  scale 4
+  name Reformat4
+  xpos 403
+  ypos 449
+  disable {{parent.antialiasing==0?1:0 x20 1}}
+ }
+ ReLight {
+  inputs 4
+  name ReLight4
+  xpos 403
+  ypos 514
+ }
+ Reformat {
+  type scale
+  scale {{1/parent.Reformat4.scale}}
+  filter Parzen
+  name Reformat5
+  xpos 403
+  ypos 555
+  disable {{parent.Reformat4.disable}}
+ }
+ Dot {
+  name Dot44
+  xpos 437
+  ypos 600
+ }
+ Grade {
+  name Grade3
+  xpos 529
+  ypos 596
+ }
+set Nfc6b7400 [stack 0]
+push $Nfc256400
+ Merge2 {
+  inputs 2
+  operation soft-light
+  name Merge13
+  xpos 698
+  ypos 522
+ }
+push $Nfc6b7400
+ Switch {
+  inputs 2
+  which {{parent.softlight}}
+  name Switch1
+  xpos 698
+  ypos 596
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Multiply
+  xpos 855
+  ypos 596
+  disable {{parent.multiao==0?1:0}}
+ }
+set Nfc6b6800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation plus
+  name Plus
+  xpos 1020
+  ypos 596
+  disable {{parent.plus==0?1:0}}
+ }
+ Output {
+  name Output1
+  xpos 1020
+  ypos 696
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote11
+  label 可选项
+  xpos 699
+  ypos 546
+ }
+push $Nfc6b6800
+ Viewer {
+  frame_range 1-50
+  name Viewer1
+  xpos 959
+  ypos 439
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote8
+  label "对于fall off的设置，\nNo fall off 不衰减\nlinear 1/x(距离)\nquadratic 1/x²（现实中的衰变模型）\ncubic 1/x³"
+  xpos -58
+  ypos 369
+ }
+ Group {
+  inputs 0
+  name bm_CurveRemapper
+  help "A simple, albeit handy tool to remap curves from one value to the other. Made to help tackle the random output from the curve tool."
+  tile_color 0x232323ff
+  xpos -19
+  ypos 160
+  addUserKnob {20 userTab l Options}
+  addUserKnob {26 ""}
+  addUserKnob {26 helpText_01 l "" +STARTLINE T "C O P Y  A N I M A T I O N  C U R V E  H E R E :\n\nInput Animation Curve expects keyframes\n(expression-links must be baked.)\n"}
+  addUserKnob {7 curveValue l "Animation Curve"}
+  curveValue {{curve x1 0 0 0 0 0 4.8079089e-09 7.071194375e-09 9.59968801e-08 1.374059716e-07 7.755356383e-08 2.463741692e-07 0 0.001842316008 0.007692510309 0.01483422354 0.03040581461 0.04685740645 0.06638526068 0.0875772398 0.08966882379 0.09063445462 0.09347417302 0.0940666538 0.09100308795 0.08061341013 0.07259906446 0.05976098685 0.05287350341 0.04232291967 0.03174810584 0.02117161192 0.01154271342 0.005058174035 0.002349682146 0.001194349902 0.0005394063584 0.0002376084663 0.00016553127 0.0001524758654 0.0001550526201 0.000152454403 0.0001424287148 0.0001375874382 0.0001329696007 0.0001283784104 0.0001235103892 0.0001135971117 0.0001011881479 9.955538642e-05 8.676624378e-05}}
+  addUserKnob {22 autoMinMax l "Find Minimum and Maximum Curve Values" T "#Adds python into expression knob, which evalutes and finds the answer\nnuke.thisNode().knob('curveMin').setExpression(\"\[python min((key.y for key in nuke.thisNode().knob('curveValue').animation(0).keys()))]\")\nnuke.thisNode().knob('curveMax').setExpression(\"\[python max((key.y for key in nuke.thisNode().knob('curveValue').animation(0).keys()))]\")\n\n#Remove the expression\nnuke.thisNode().knob('curveMin').clearAnimated()\nnuke.thisNode().knob('curveMax').clearAnimated()" +STARTLINE}
+  addUserKnob {26 ""}
+  addUserKnob {7 curveMin l "Curve Minimum"}
+  addUserKnob {7 curveMax l "Curve Maximum"}
+  curveMax 0.0940666538
+  addUserKnob {7 newMin l "New Minimum"}
+  addUserKnob {7 newMax l "New Maximum"}
+  newMax 1
+  addUserKnob {26 ""}
+  addUserKnob {26 helpText_02 l "" +STARTLINE T "C O P Y   N E W   A N I M A T I O N   C U R V E\nO U T   O F   H E R E :\n"}
+  addUserKnob {7 curveOutput l Output}
+  curveOutput {{lerp(curveMin,newMin,curveMax,newMax,curveValue) i}}
+  addUserKnob {26 ""}
+  addUserKnob {20 infoTab l Info}
+  addUserKnob {26 ""}
+  addUserKnob {26 versionInfo l "" +STARTLINE T "\nCreated by Ben McEwan\nwww.benmcewan.com\n\nVersion 1.2\nLast Updated: November 7th, 2018\n"}
+  addUserKnob {26 ""}
+ }
+  Output {
+   inputs 0
+   name Output1
+   xpos -651
+   ypos -209
+  }
+ end_group
+ NoOp {
+  inputs 0
+  name NoOp1
+  xpos -19
+  ypos 222
+  addUserKnob {20 User}
+  addUserKnob {6 lowsaturation_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 color_rgb}
+  color_rgb {0 1 0}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {7 intensity l "raw intensity" R 0 10}
+  intensity 2.35
+  addUserKnob {41 curveOutput l Factor T bm_CurveRemapper.curveOutput}
+  addUserKnob {7 final}
+  final {{bm_CurveRemapper.curveOutput*intensity x11 0.485 x20 0.625}}
+ }
+end_group

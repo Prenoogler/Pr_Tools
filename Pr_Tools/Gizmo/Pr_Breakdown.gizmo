@@ -1,0 +1,436 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ inputs 3
+ knobChanged "tn = nuke.thisNode()\ntk = nuke.thisKnob()\n\nif tk.name()=='keyframemode':\n    tn\['startframe'].setVisible(tk.getValue()==0)\n    tn\['duration'].setVisible(tk.getValue()==0)\n    tn\['mannualkey'].setVisible(tk.getValue()==1)\n    \nif tk.name()=='mode_2':\n    tn\['reviewwidth'].setVisible(tk.getValue()==1)"
+ tile_color 0x62c9b9ff
+ addUserKnob {20 main l Main}
+ addUserKnob {6 c_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {4 mode l com_mode M {Keymix Merge Dissolve "" "" "" ""}}
+ addUserKnob {6 A2 l "Contrast A2" -STARTLINE}
+ addUserKnob {6 alpha l "Auto Alpha" -STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {4 keyframemode l "keyframe mode" M {auto manual}}
+ addUserKnob {3 startframe l "start frame"}
+ startframe 10
+ addUserKnob {3 duration -STARTLINE}
+ duration 10
+ addUserKnob {12 mannualkey +HIDDEN}
+ mannualkey {1448 300}
+ addUserKnob {26 ""}
+ addUserKnob {4 mode_2 l slide_mode M {wipe review "" ""}}
+ addUserKnob {7 reviewwidth l "review width" +HIDDEN}
+ reviewwidth 0.065
+ addUserKnob {41 value l colour T Multiply1.value}
+ addUserKnob {41 width1 l "line width" T NoOp1.width1}
+ addUserKnob {41 angle l rotate T NoOp1.angle}
+ addUserKnob {26 ""}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_Breakdown v1.0\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ StickyNote {
+  inputs 0
+  name StickyNote2
+  label "make a 100fps animation"
+  xpos 422
+  ypos -714
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label "cornerpin\nfrom set input\nto1 x:-width,y:0\nto2 x:0,y:0\nto3 x:0,y:height\nto4 x:-width,y:height\nbut rotation making to2x offset\nso to1,to2,to4's x minus to2x offset\n\naddtionally\ntraslate's x plus to2x offset"
+  xpos 65
+  ypos -566
+ }
+ NoOp {
+  inputs 0
+  name NoOp1
+  xpos 961
+  ypos -468
+  addUserKnob {20 User}
+  addUserKnob {12 xy +HIDDEN}
+  xy {0 480}
+  addUserKnob {7 width2}
+  width2 {{parent.reviewwidth}}
+  addUserKnob {7 width1 R 0 30}
+  width1 11
+  addUserKnob {7 translate1 t translate1}
+  translate1 {{curve L x1 0 x100 1}}
+  addUserKnob {7 angle t angle}
+  angle 0.18
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote3
+  label "alpha left extend 200px to avoid mannual mode too short"
+  xpos 230
+  ypos -554
+ }
+ Input {
+  inputs 0
+  name A
+  xpos 1453
+  ypos -996
+  number 1
+ }
+ Shuffle {
+  alpha white
+  name Shuffle6
+  xpos 1453
+  ypos -940
+  disable {{1-parent.alpha}}
+ }
+set Neb8b7c00 [stack 0]
+ Input {
+  inputs 0
+  name A2
+  xpos 1628
+  ypos -998
+  number 2
+ }
+ Shuffle {
+  alpha white
+  name Shuffle7
+  xpos 1628
+  ypos -939
+  disable {{1-parent.alpha}}
+ }
+ ContactSheet {
+  inputs 2
+  width {{width()}}
+  height {{height()}}
+  rows 1
+  columns 2
+  center true
+  name ContactSheet1
+  xpos 1628
+  ypos -854
+  disable {{1-parent.A2}}
+ }
+push $Neb8b7c00
+ Switch {
+  inputs 2
+  which {{parent.A2}}
+  name Switch1
+  xpos 1453
+  ypos -803
+ }
+ Dot {
+  name Dot3
+  note_font_size 35
+  xpos 1487
+  ypos -105
+ }
+ Dot {
+  name Dot10
+  xpos 1424
+  ypos -105
+ }
+set Neb8b6400 [stack 0]
+ Input {
+  inputs 0
+  name B
+  xpos 1126
+  ypos -998
+ }
+ Shuffle {
+  alpha white
+  name Shuffle2
+  xpos 1126
+  ypos -941
+  disable {{1-parent.alpha}}
+ }
+ Dot {
+  name Dot1
+  note_font_size 35
+  xpos 1159
+  ypos -651
+ }
+set Neb8d7800 [stack 0]
+ Dot {
+  name Dot15
+  xpos 1337
+  ypos -651
+ }
+ Dot {
+  name Dot16
+  xpos 1337
+  ypos -70
+ }
+ Dissolve {
+  inputs 2
+  which {{curve*parent.NoOp1.translate1 x1 0 x100 1}}
+  name Dissolve1
+  xpos 1390
+  ypos -38
+ }
+push $Neb8d7800
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 452
+  ypos -654
+ }
+set Neb8d6800 [stack 0]
+ CornerPin2D {
+  to1 {{-width()-height()*parent.NoOp1.angle+(width()*(1-parent.NoOp1.width2))} {curve}}
+  to2 {{-height()*parent.NoOp1.angle} 0}
+  to3 {0 {height()}}
+  to4 {{-width()+(width()*(1-parent.NoOp1.width2))} {height()}}
+  invert false
+  black_outside false
+  from1 {0 0}
+  from2 {{width()} 0}
+  from3 {{width()} {height()}}
+  from4 {0 {height()}}
+  name CornerPin2D4
+  xpos 547
+  ypos -581
+  disable {{parent.NoOp1.width2==0?1:0}}
+  addUserKnob {20 function l Function}
+  addUserKnob {22 setref l "Set Reference" -STARTLINE T cornerpin.cornerpinsetreference()}
+ }
+push $Neb8d6800
+ CornerPin2D {
+  to1 {{-parent.input.width-(parent.input.height*parent.NoOp1.angle)-500} {curve}}
+  to2 {{-parent.input.height()*parent.NoOp1.angle x1 -560} {curve x1 0}}
+  to3 {0 {parent.input.height}}
+  to4 {{-width()-(height()*parent.NoOp1.angle)-500} {height()}}
+  "extra matrix" 1
+  invert false
+  black_outside false
+  from1 {0 0}
+  from2 {{width()} 0}
+  from3 {{width()} {height()}}
+  from4 {0 {height()}}
+  name CornerPin2D3
+  xpos 385
+  ypos -579
+  addUserKnob {20 function l Function}
+  addUserKnob {22 setref l "Set Reference" -STARTLINE T cornerpin.cornerpinsetreference()}
+ }
+ Switch {
+  inputs 2
+  which {{parent.mode_2}}
+  name Switch5
+  xpos 452
+  ypos -525
+ }
+ set Cfb37b400 [stack 0]
+ Dot {
+  name Dot7
+  note_font_size 35
+  xpos 486
+  ypos -484
+ }
+set Nfb37b000 [stack 0]
+ Dot {
+  name Dot9
+  note_font_size 35
+  xpos 319
+  ypos -484
+ }
+ Transform {
+  translate {{parent.mannualkey} 0}
+  name Transform2
+  xpos 393
+  ypos -386
+  disable {{1-parent.Manual x7 1}}
+ }
+push $Nfb37b000
+ Dot {
+  name Dot8
+  note_font_size 35
+  xpos 686
+  ypos -484
+ }
+ Transform {
+  translate {{(width()+width()+(height()*parent.NoOp1.angle))*parent.NoOp1.translate1} {curve}}
+  center {{width()*0.5} {height()*0.5}}
+  name Transform3
+  xpos 652
+  ypos -439
+  disable {{(parent.NoOp1.width2==0?1:0)+parent.Manual}}
+ }
+push $Nfb37b000
+ Transform {
+  translate {{(width()+height()*parent.NoOp1.angle)*parent.NoOp1.translate1} 0}
+  center {{width()*0.5} {height()*0.5}}
+  name Transform1
+  xpos 493
+  ypos -441
+  disable {{(parent.NoOp1.width2==0?0:1)+(parent.Manual)}}
+ }
+clone $Cfb37b400 {
+  inputs 2
+  xpos 541
+  ypos -389
+  selected false
+ }
+ Switch {
+  inputs 2
+  which {{parent.keyframemode}}
+  name Switch3
+  xpos 452
+  ypos -334
+ }
+ Crop {
+  box {0 0 {width()} {height()}}
+  crop false
+  name Crop1
+  xpos 452
+  ypos -294
+ }
+ Retime {
+  input.first_lock true
+  input.last_lock true
+  output.first {{parent.startframe-1}}
+  output.first_lock true
+  output.last {{parent.startframe+parent.duration-1}}
+  output.last_lock true
+  speed 9.090909091
+  filter none
+  time ""
+  name Retime1
+  xpos 452
+  ypos -227
+ }
+set Nfb3a0c00 [stack 0]
+ Dot {
+  name Dot2
+  note_font_size 35
+  xpos 486
+  ypos -81
+ }
+ Dot {
+  name Dot13
+  xpos 876
+  ypos -81
+ }
+set Nfb3a0400 [stack 0]
+push $Neb8b6400
+ Dot {
+  name Dot12
+  xpos 1303
+  ypos -105
+ }
+set Nfb3a0000 [stack 0]
+ Dot {
+  name Dot11
+  xpos 1071
+  ypos -105
+ }
+push $Nfb3a0c00
+push $Nfb3a0c00
+ FilterErode {
+  size {{-parent.NoOp1.width1}}
+  name FilterErode1
+  xpos 594
+  ypos -233
+  disable {{parent.NoOp1.width1==0?1:0}}
+ }
+ Merge2 {
+  inputs 2
+  operation stencil
+  name Merge3
+  xpos 594
+  ypos -180
+  disable {{parent.NoOp1.width1==0?1:0}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle4
+  xpos 715
+  ypos -180
+  disable {{parent.NoOp1.width1==0?1:0}}
+ }
+ Multiply {
+  channels rgb
+  name Multiply1
+  xpos 834
+  ypos -180
+  disable {{parent.NoOp1.width1==0?1:0}}
+ }
+ Clamp {
+  channels rgba
+  name Clamp1
+  xpos 956
+  ypos -180
+  disable {{parent.NoOp1.width1==0?1:0}}
+ }
+push $Neb8d7800
+ Merge2 {
+  inputs 2
+  bbox B
+  name Merge1
+  xpos 1125
+  ypos -180
+  disable {{parent.NoOp1.width1==0?1:0}}
+ }
+ Dot {
+  name Dot4
+  xpos 1159
+  ypos -140
+ }
+set Nfb3f1c00 [stack 0]
+ Dot {
+  name Dot6
+  xpos 1000
+  ypos -140
+ }
+ Merge2 {
+  inputs 2+1
+  bbox B
+  name Merge2
+  xpos 966
+  ypos -34
+ }
+push $Nfb3a0400
+ Dot {
+  name Dot14
+  xpos 1135
+  ypos -81
+ }
+push $Nfb3a0000
+push $Nfb3f1c00
+ Dot {
+  name Dot5
+  xpos 1230
+  ypos -140
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  selected true
+  xpos 1196
+  ypos -42
+ }
+ Switch {
+  inputs 3
+  which {{parent.mode}}
+  name Switch4
+  xpos 1125
+  ypos 106
+ }
+ Output {
+  name Output1
+  xpos 1125
+  ypos 172
+ }
+set Nfb3f0000 [stack 0]
+push $Nfb3f0000
+ Viewer {
+  inputs 2
+  frame_range 1-200
+  input_number 1
+  name Viewer1
+  xpos 1453
+  ypos -777
+ }
+end_group

@@ -1,0 +1,12 @@
+#/Pr_Tools/gizmo/menu.py, v1.0.2 ,2020-01-18
+prmenu=nuke.menu('Nodes').addMenu('Pr_Tools')
+prmenu.addCommand('Pr_AdditiveKeyer',"nuke.createNode('Pr_AdditiveKeyer')")
+prmenu.addCommand('Pr_AlphaEdge',"nuke.createNode('Pr_AlphaEdge')")
+prmenu.addCommand('Pr_Breakdown',"nuke.createNode('Pr_Breakdown')")
+prmenu.addCommand('Pr_DespillToolKit',"nuke.createNode('Pr_DespillToolKit')")
+prmenu.addCommand('Pr_EdgeKiller',"nuke.createNode('Pr_EdgeKiller')")
+prmenu.addCommand('Pr_FoldKiller',"nuke.createNode('Pr_FoldKiller')")
+prmenu.addCommand('Pr_HeatDistortion',"nuke.createNode('Pr_HeatDistortion')")
+prmenu.addCommand('Pr_KeyingColour',"nuke.createNode('Pr_KeyingColour')")
+prmenu.addCommand('Pr_RelightToolKit',"nuke.createNode('Pr_RelightToolKit')")
+prmenu.addCommand('Pr_WiggleCurve',"nuke.createNode('Pr_WiggleCurve')")

@@ -1,0 +1,186 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ inputs 2
+ addUserKnob {20 main l Main}
+ addUserKnob {4 mode l "erode mode" M {filter blur}}
+ addUserKnob {26 ""}
+ addUserKnob {14 outererode l "outer erode" R 0 100}
+ outererode 17.5
+ addUserKnob {41 outerblur l "outer blur" T Blur2.size}
+ addUserKnob {41 white_1 l "outer gain" T Grade2.white}
+ addUserKnob {26 ""}
+ addUserKnob {14 innererode l "inner erode" R 0 100}
+ innererode 10.6
+ addUserKnob {41 innerblur l "inner blur" T Blur1.size}
+ addUserKnob {41 white l "inner gain" T Grade1.white}
+ addUserKnob {26 ""}
+ addUserKnob {41 overallblur l "overall blur" T Blur3.size}
+ addUserKnob {41 white_2 l "overall gain" T Grade3.white}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_AlphaEdge v1.1\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ StickyNote {
+  inputs 0
+  name StickyNote2
+  label outer
+  xpos 260
+  ypos -135
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label inner
+  xpos -265
+  ypos -130
+ }
+ Input {
+  inputs 0
+  name main
+  xpos -5
+  ypos -293
+ }
+set Nfc08e000 [stack 0]
+ Erode {
+  size {{parent.FilterErode1.size}}
+  name Erode1
+  xpos -227
+  ypos -190
+ }
+set Nfc0d1c00 [stack 0]
+ Viewer {
+  frame_range 100-100
+  name Viewer1
+  xpos -489
+  ypos 206
+ }
+ Input {
+  inputs 0
+  name mask
+  xpos 265
+  ypos 79
+  number 1
+ }
+ Invert {
+  name Invert1
+  xpos 265
+  ypos 141
+ }
+push $Nfc08e000
+ Dot {
+  name Dot2
+  xpos -417
+  ypos -289
+ }
+ Dot {
+  name Dot1
+  xpos -417
+  ypos 151
+ }
+push $Nfc08e000
+ Erode {
+  size {{parent.FilterErode2.size}}
+  name Erode2
+  xpos 208
+  ypos -188
+ }
+push $Nfc08e000
+ FilterErode {
+  size {{-parent.outererode}}
+  name FilterErode2
+  xpos 101
+  ypos -190
+ }
+ Switch {
+  inputs 2
+  which {{parent.mode}}
+  name Switch1
+  xpos 158
+  ypos -130
+ }
+ set Cfc103c00 [stack 0]
+ Blur {
+  channels alpha
+  size 11.6
+  name Blur2
+  xpos 101
+  ypos -81
+ }
+ Grade {
+  channels alpha
+  white_clamp true
+  name Grade2
+  xpos 101
+  ypos -33
+ }
+push $Nfc0d1c00
+push $Nfc08e000
+ FilterErode {
+  size {{parent.innererode}}
+  name FilterErode1
+  xpos -126
+  ypos -190
+ }
+clone $Cfc103c00 {
+  inputs 2
+  xpos -177
+  ypos -129
+  selected false
+ }
+ Blur {
+  channels alpha
+  size 1.2
+  name Blur1
+  xpos -120
+  ypos -89
+ }
+ Grade {
+  channels alpha
+  white_clamp true
+  name Grade1
+  xpos -120
+  ypos -40
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge1
+  xpos -8
+  ypos -5
+ }
+ Blur {
+  channels alpha
+  size 11.8
+  name Blur3
+  xpos -8
+  ypos 37
+ }
+ Grade {
+  channels alpha
+  white_clamp true
+  name Grade3
+  xpos -8
+  ypos 88
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  xpos -8
+  ypos 141
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle1
+  xpos -8
+  ypos 220
+ }
+ Output {
+  name Output1
+  selected true
+  xpos -8
+  ypos 301
+ }
+end_group

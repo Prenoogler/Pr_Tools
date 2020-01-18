@@ -1,0 +1,46 @@
+#! C:/Program Files/Nuke11.3v4/nuke-11.3.4.dll -nx
+version 11.3 v4
+Gizmo {
+ knobChanged "if nuke.thisKnob().name() in \['control_min','control_max']:\n    nuke.thisNode()\['difference'].setValue(str((nuke.thisNode()\['control_max'].value()-nuke.thisNode()\['control_min'].value())))\n\nif nuke.thisKnob().name()=='mode':\n    if nuke.thisNode()\['mode'].getValue()==0:\n        nuke.toNode('control')\['final'].setExpression('random(frame*control.frequence)*control.difference+control.min')\n    elif nuke.thisNode()\['mode'].getValue()==1:\n        nuke.toNode('control')\['final'].setExpression('(sin(control.frequence*frame)+1)*1/2*control.difference+control.min')"
+ addUserKnob {20 main l Main}
+ addUserKnob {4 mode M {random sin}}
+ addUserKnob {26 difference l max-min= T 2.03}
+ addUserKnob {7 control_min l min R 0 3}
+ control_min 0.65
+ addUserKnob {7 control_max l max R 0 3}
+ control_max 2.68
+ addUserKnob {41 frequence T control.frequence}
+ addUserKnob {41 final l "final curve" T control.final}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 helptext l "" +STARTLINE T "<p>\n\tPr_WiggleCurve v1.0\n</p>\n<p>\n\tBase On <a href=\"https://www.shuaiqi.me/tools/\" target=\"_blank\">Pr_Tools</a> \n</p>"}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 0
+  ypos -187
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 300
+ }
+ NoOp {
+  inputs 0
+  name control
+  xpos -108
+  ypos 57
+  addUserKnob {20 tab}
+  addUserKnob {7 min}
+  min {{parent.control_min i}}
+  addUserKnob {7 max}
+  max {{parent.control_max i}}
+  addUserKnob {7 difference}
+  difference {{control.max-control.min i x29 0.53}}
+  addUserKnob {7 frequence R 0 3}
+  frequence 0.67
+  addUserKnob {7 final}
+  final {{random(frame*control.frequence)*control.difference+control.min}}
+ }
+end_group
